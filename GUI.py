@@ -8,8 +8,8 @@ import NeuralNet
 
 
 class Paint(Frame):
-    width = 20
-    height = 20
+    width = 200
+    height = 200
     # alphabet = ['А','Б','В','Г','Д','Е','Ё','Ж','З','И','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ь','Ы','Э','Ю','Я','0','1','2','3','4','5','6','7','8','9']
     alphabet = ['0','1','2','3','4']
     learned = []
@@ -21,7 +21,7 @@ class Paint(Frame):
         self.nnet = NeuralNet.NeuralNet((self.width * self.height), self.width,len(self.alphabet),self.learning_rate)
 
         self.setUI()
-        self.brush_size = 1
+        self.brush_size = 8
         self.brush_color="black"
 
 
@@ -100,8 +100,8 @@ class Paint(Frame):
         numimage = np.dot(np.array(im),[0.299, 0.587, 0.114]).ravel()
         # im = Image.fromarray(numimage)
         # im.show()
-        # im.save(os.getcwd()+"\\img\\" + str(random.randint(1, 1000000000))+".JPG")
-        scaled_image = (numimage / 255 * 0.99) + 0.01
+        im.save(os.getcwd()+"\\img\\" + str(random.randint(1, 1000000000))+".JPG")
+        scaled_image = (numimage / 255 * 0.98) + 0.01
         # print(list(scaled_image))
         # im = Image.fromarray(scaled_image)
         # im.show()
@@ -110,9 +110,8 @@ class Paint(Frame):
 
         output = [0.99 if self.curval == x else 0.01 for x in self.alphabet ]
         print(output)
-        for i in range(10):
+        for i in range(3):
             self.nnet.train(scaled_image,output)
-
         r = 12
         c = 0
         for i in range(len(self.learned)):
@@ -132,9 +131,9 @@ class Paint(Frame):
         # if self.li == self.rl:
         #     print("!!!!")
         im = ImageGrab.grab().crop((x, y, x1, y1))
-        im.show()
+        # im.show()
         numimage = np.dot(np.array(im),[0.299, 0.587, 0.114]).ravel()
-        scaled_image = (numimage / 255 * 0.99) + 0.01
+        scaled_image = (numimage / 255 * 0.98) + 0.01
         result = self.nnet.work(scaled_image)
         print(result)
         col = 0

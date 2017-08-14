@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 import numpy as np
-
-
+from PIL import Image
+import os
 class NeuralNet:
     def __init__(self, inodes, hnodes, onodes, lrate):
         # set number of nodes in each input, hidden, output layer
@@ -15,11 +15,22 @@ class NeuralNet:
         # set link weights
         self.wih = np.random.normal(0.0,pow(self.hnodes,-0.5),(self.hnodes,self.inodes))
         self.who = np.random.normal(0.0,pow(self.onodes,-0.5),(self.onodes,self.hnodes))
+
         # print(self.wih,end='\n\n')
         # print(self.who,end='\n\n')
 
         # set activation function
-        self.activation_function = lambda x: 1/(1+np.exp(-x))
+
+        # self.activation_function = lambda x: 1/(1+np.exp(-x))
+    def activation_function(self,x):
+        # if (1/(1+np.exp(-x)) < 0.01):
+        #     return 0.01
+        def ReLU(x):
+            return x * (x > 0)
+
+        def dReLU(x):
+            return 1. * (x > 0)
+        return 1/(1+np.exp(-x))
 
     def train(self,input_list,target_list):
         # convert inputs list to 2d array
@@ -35,7 +46,7 @@ class NeuralNet:
         final_outputs = self.activation_function(final_inputs)
         # output layer error is the (target ­ actual)
         output_errors = targets - final_outputs
-        # print(output_errors.mean())
+        print(output_errors.mean())
         # hidden layer error is the output_errors, split by weights,recombined at hidden nodes
         hidden_errors = np.dot(self.who.T, output_errors)
         # update the weights for the links between the hidden and output layers
@@ -58,67 +69,88 @@ class NeuralNet:
 
 if __name__ == "__main__":
 
-    input_nodes = 784
-    hidden_nodes = 100
-    output_nodes =  10
-    learning_rate = 20
-
+    # input_nodes = 400
+    # hidden_nodes = 100
+    # output_nodes =  5
+    # learning_rate = 0.4
+    input_nodes = 2
+    hidden_nodes = 2
+    output_nodes =  2
+    learning_rate = 45
     n = NeuralNet(input_nodes, hidden_nodes, output_nodes, learning_rate)
-    # for i in range(100):
-    #     n.train([0.5,0.5,0.5],[0.8,0.9])
-    # print(n.work([0.5,0.5,0.5]))
+    im = Image.open(os.getcwd()+"\\img\\1.JPG")
+    r = np.dot(np.array(im), [0.299, 0.587, 0.114]).ravel()
+    scaled = (r / 255 * 0.98) + 0.1
 
-    # load the mnist training data CSV file into a list
-    training_data_file = open("mnist_train.csv", 'r')
-    training_data_list = training_data_file.readlines()
-    training_data_file.close()
-    # train the neural network
-    # epochs is the number of times the training data set is used for training
-    epochs = 5
-    for e in range(epochs):
-        # go through all records in the training data set
-        for record in training_data_list:
-            # split the record by the ',' commas
-            all_values = record.split(',')
-            # scale and shift the inputs
-            inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
-            # create the target output values (all 0.01, except the desired label which is 0.99)
-            targets = np.zeros(output_nodes) + 0.01
+    im1 = Image.open(os.getcwd()+"\\img\\4.JPG")
+    r1 = np.dot(np.array(im1),[0.299, 0.587, 0.114]).ravel()
+    scaled1 = (r1 / 255 * 0.98) + 0.1
 
-            # all_values[0] is the target label for this record
-            targets[int(all_values[0])] = 0.99
-            n.train(inputs, targets)
-        pass
-    pass
-    # # load the mnist test data CSV file into a list
-    test_data_file = open("mnist_test.csv", 'r')
-    test_data_list = test_data_file.readlines()
-    test_data_file.close()
-    # test the neural network
-    # scorecard for how well the network performs, initially empty
-    scorecard = []
-    # go through all the records in the test data set
-    for record in test_data_list:
-    # split the record by the ',' commas
-        all_values = record.split(',')
-        # correct answer is first value
-        correct_label = int(all_values[0])
-        # scale and shift the inputs
-        inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
-        # query the network
-        outputs = n.work(inputs)
-        # the index of the highest value corresponds to the label
-        label = np.argmax(outputs)
-        # append correct or incorrect to list
-        if (label == correct_label):
-        # network's answer matches correct answer, add 1 to scorecard
-            scorecard.append(1)
-        else:
-        # network's answer doesn't match correct answer, add 0 to scorecard
-            scorecard.append(0)
-        pass
-    pass
-    # calculate the performance score, the fraction of correct answers
-    scorecard_array = np.asarray(scorecard)
-    print ("performance = ", scorecard_array.sum() /   scorecard_array.size)
+    # for i in range(10):
+    #     n.train(scaled, [0.99,0.01,0.01,0.01,0.01])
+    # print(n.work(scaled1))
+    # print(n.work(scaled))
+
+    print(n.wih)
+    print(n.who)
+    n.train([0.1,0.9], [0.9,0.1])
+    n.train([0.1,0.9], [0.9,0.1])
+    print(n.work([0.1,0.9]))
+    print(n.work([0.9,0.1]))
+    print(n.wih)
+    print(n.who)
+
+    # # load the mnist training data CSV file into a list
+    # training_data_file = open("mnist_train.csv", 'r')
+    # training_data_list = training_data_file.readlines()
+    # training_data_file.close()
+    # # train the neural network
+    # # epochs is the number of times the training data set is used for training
+    # epochs = 5
+    # for e in range(epochs):
+    #     # go through all records in the training data set
+    #     for record in training_data_list:
+    #         # split the record by the ',' commas
+    #         all_values = record.split(',')
+    #         # scale and shift the inputs
+    #         inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+    #         # create the target output values (all 0.01, except the desired label which is 0.99)
+    #         targets = np.zeros(output_nodes) + 0.01
+    #
+    #         # all_values[0] is the target label for this record
+    #         targets[int(all_values[0])] = 0.99
+    #         n.train(inputs, targets)
+    #     pass
+    # pass
+    # # # load the mnist test data CSV file into a list
+    # test_data_file = open("mnist_test.csv", 'r')
+    # test_data_list = test_data_file.readlines()
+    # test_data_file.close()
+    # # test the neural network
+    # # scorecard for how well the network performs, initially empty
+    # scorecard = []
+    # # go through all the records in the test data set
+    # for record in test_data_list:
+    # # split the record by the ',' commas
+    #     all_values = record.split(',')
+    #     # correct answer is first value
+    #     correct_label = int(all_values[0])
+    #     # scale and shift the inputs
+    #     inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+    #     # query the network
+    #     outputs = n.work(inputs)
+    #     # the index of the highest value corresponds to the label
+    #     label = np.argmax(outputs)
+    #     # append correct or incorrect to list
+    #     if (label == correct_label):
+    #     # network's answer matches correct answer, add 1 to scorecard
+    #         scorecard.append(1)
+    #     else:
+    #     # network's answer doesn't match correct answer, add 0 to scorecard
+    #         scorecard.append(0)
+    #     pass
+    # pass
+    # # calculate the performance score, the fraction of correct answers
+    # scorecard_array = np.asarray(scorecard)
+    # print ("performance = ", scorecard_array.sum() /   scorecard_array.size)
 
