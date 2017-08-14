@@ -17,8 +17,8 @@ class Paint(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
         self.parent = parent
-        self.hnodes = 500
-        self.learning_rate = 0.2
+        self.hnodes = 400
+        self.learning_rate = 0.001
         self.nnet = NeuralNet.NeuralNet((self.width * self.height), self.hnodes,len(self.alphabet),self.learning_rate)
 
         self.setUI()
@@ -111,7 +111,7 @@ class Paint(Frame):
 
         output = [0.99 if self.curval == x else 0.01 for x in self.alphabet ]
         print(output)
-        for i in range(10):
+        for i in range(40):
             self.nnet.train(scaled_image,output)
         r = 12
         c = 0

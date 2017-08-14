@@ -74,7 +74,7 @@ if __name__ == "__main__":
     # output_nodes =  5
     # learning_rate = 0.4
     input_nodes = 40000
-    hidden_nodes = 300
+    hidden_nodes = 400
     output_nodes =  5
     learning_rate = 0.001
     n = NeuralNet(input_nodes, hidden_nodes, output_nodes, learning_rate)
@@ -99,12 +99,29 @@ if __name__ == "__main__":
     r4 = np.dot(np.array(im4),[0.299, 0.587, 0.114]).ravel()
     scaled4 = (r4 / 255 * 0.98) + 0.1
 
+    im11 = Image.open(os.getcwd()+"\\img\\111.JPG")
+    r11 = np.dot(np.array(im11),[0.299, 0.587, 0.114]).ravel()
+    scaled11 = (r11 / 255 * 0.98) + 0.1
+
+    im22 = Image.open(os.getcwd()+"\\img\\222.JPG")
+    r22 = np.dot(np.array(im22),[0.299, 0.587, 0.114]).ravel()
+    scaled22 = (r22 / 255 * 0.98) + 0.1
+
+    im33 = Image.open(os.getcwd()+"\\img\\333.JPG")
+    r33 = np.dot(np.array(im33),[0.299, 0.587, 0.114]).ravel()
+    scaled33 = (r33 / 255 * 0.98) + 0.1
+
+    im44 = Image.open(os.getcwd()+"\\img\\444.JPG")
+    r44 = np.dot(np.array(im44),[0.299, 0.587, 0.114]).ravel()
+    scaled44 = (r44 / 255 * 0.98) + 0.1
+
     for i in range(40):
         # n.train(scaled0, [0.99,0.01,0.01,0.01,0.01])
         n.train(scaled1, [0.01,0.99,0.01,0.01,0.01])
         n.train(scaled2, [0.01,0.01,0.99,0.01,0.01])
         n.train(scaled3, [0.01,0.01,0.01,0.99,0.01])
         n.train(scaled4, [0.01,0.01,0.01,0.01,0.99])
+        # n.train(scaled44, [0.01,0.01,0.01,0.01,0.99])
         print()
 
     # print(n.work(scaled0).ravel())
