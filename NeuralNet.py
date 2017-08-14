@@ -25,11 +25,11 @@ class NeuralNet:
     def activation_function(self,x):
         # if (1/(1+np.exp(-x)) < 0.01):
         #     return 0.01
-        def ReLU(x):
-            return x * (x > 0)
-
-        def dReLU(x):
-            return 1. * (x > 0)
+        # def ReLU(x):
+        #     return x * (x > 0)
+        #
+        # def dReLU(x):
+        #     return 1. * (x > 0)
         return 1/(1+np.exp(-x))
 
     def train(self,input_list,target_list):
@@ -73,32 +73,54 @@ if __name__ == "__main__":
     # hidden_nodes = 100
     # output_nodes =  5
     # learning_rate = 0.4
-    input_nodes = 2
-    hidden_nodes = 2
-    output_nodes =  2
-    learning_rate = 45
+    input_nodes = 40000
+    hidden_nodes = 300
+    output_nodes =  5
+    learning_rate = 0.001
     n = NeuralNet(input_nodes, hidden_nodes, output_nodes, learning_rate)
-    im = Image.open(os.getcwd()+"\\img\\1.JPG")
-    r = np.dot(np.array(im), [0.299, 0.587, 0.114]).ravel()
-    scaled = (r / 255 * 0.98) + 0.1
 
-    im1 = Image.open(os.getcwd()+"\\img\\4.JPG")
-    r1 = np.dot(np.array(im1),[0.299, 0.587, 0.114]).ravel()
+    # im0 = Image.open(os.getcwd()+"\\img\\00.JPG")
+    # r0 = np.dot(np.array(im0), [0.299, 0.587, 0.114]).ravel()
+    # scaled0 = (r0 / 255 * 0.98) + 0.1
+
+    im1 = Image.open(os.getcwd()+"\\img\\11.JPG")
+    r1 = np.dot(np.array(im1), [0.299, 0.587, 0.114]).ravel()
     scaled1 = (r1 / 255 * 0.98) + 0.1
 
-    # for i in range(10):
-    #     n.train(scaled, [0.99,0.01,0.01,0.01,0.01])
-    # print(n.work(scaled1))
-    # print(n.work(scaled))
+    im2 = Image.open(os.getcwd()+"\\img\\22.JPG")
+    r2 = np.dot(np.array(im2), [0.299, 0.587, 0.114]).ravel()
+    scaled2 = (r2 / 255 * 0.98) + 0.1
 
-    print(n.wih)
-    print(n.who)
-    n.train([0.1,0.9], [0.9,0.1])
-    n.train([0.1,0.9], [0.9,0.1])
-    print(n.work([0.1,0.9]))
-    print(n.work([0.9,0.1]))
-    print(n.wih)
-    print(n.who)
+    im3 = Image.open(os.getcwd()+"\\img\\33.JPG")
+    r3 = np.dot(np.array(im3), [0.299, 0.587, 0.114]).ravel()
+    scaled3 = (r3 / 255 * 0.98) + 0.1
+
+    im4 = Image.open(os.getcwd()+"\\img\\44.JPG")
+    r4 = np.dot(np.array(im4),[0.299, 0.587, 0.114]).ravel()
+    scaled4 = (r4 / 255 * 0.98) + 0.1
+
+    for i in range(40):
+        # n.train(scaled0, [0.99,0.01,0.01,0.01,0.01])
+        n.train(scaled1, [0.01,0.99,0.01,0.01,0.01])
+        n.train(scaled2, [0.01,0.01,0.99,0.01,0.01])
+        n.train(scaled3, [0.01,0.01,0.01,0.99,0.01])
+        n.train(scaled4, [0.01,0.01,0.01,0.01,0.99])
+        print()
+
+    # print(n.work(scaled0).ravel())
+    print(n.work(scaled1).ravel())
+    print(n.work(scaled2).ravel())
+    print(n.work(scaled3).ravel())
+    print(n.work(scaled4).ravel())
+
+
+    # for i in range(100):
+    #     n.train([0.2,0.2,0.2], [0.2,0.2,0.2])
+    #     n.train([0.9,0.9,0.9], [0.9,0.9,0.9])
+    # print(n.work([0.3,0.3,0.3]))
+    # print(n.work([0.7,0.7,0.7]))
+    # print(n.work([0.1,0.1,0.1]))
+
 
     # # load the mnist training data CSV file into a list
     # training_data_file = open("mnist_train.csv", 'r')
